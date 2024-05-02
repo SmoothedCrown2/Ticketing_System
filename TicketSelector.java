@@ -13,6 +13,11 @@
  * 
  * @author Kameren Jouhal
  */
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -102,7 +107,96 @@ public class TicketSelector {
             u.tickets += 1;
         }
     }
+
+    /**
+     * Reads in a file and parses the information
+     * Adds the information to the draw
+     * 
+     * File should be in the format:
+     * Name(delimiter)Number of tickets
+     * Note: replace (delimiter) with a string
+     * 
+     * @param filename Name of the file
+     * @param delimiter Delimiter in the file that separates name and the number of tickets
+     * 
+     * @return True if it was able to read from the file, false if not
+     */
+    boolean readFile(String filename, String delimiter) {
+        try {
+            // Open the file
+            File f = new File(filename);
+            // Open a buffered reader for the file
+            BufferedReader r = new BufferedReader(new FileReader(f));
+            // Loop until the end of the file
+            String line = r.readLine();
+            while(line != null) {
+                // Split the line
+                String split[] = line.split(delimiter);
+                // Assumes the name comes first and the number of tickets comes second
+                // Also assumes there are only two items in the line
+                String name = split[0];
+                int tickets = Integer.parseInt(split[1]);
+                // Add the person to the draw
+                addPerson(name, tickets);
+                // Go to the next line
+                line = r.readLine();
+            }
+            // Close the bufferedreader
+            r.close();
+            // Return true
+            return true;
+        } catch(Exception e) {
+            // Print an error and the stack trace
+            System.out.println("Error while reading the file");
+            e.printStackTrace();
+            // Return false
+            return false;
+        }
+    }
+
+    /**
+     * Writes the updated people and tickets to the file
+     * 
+     * File will be in the format:
+     * Name(delimiter)Number of tickets
+     * Note: will replace (delimiter) with a string
+     * 
+     * @param filename Name of the file
+     * @param delimiter Delimiter for the file that separates name and number of tickets
+     * 
+     * @return True if it was able to write to the file, false if not
+     */
+    boolean writeToFile(String filename, String delimiter) {
+        try {
+            // Open the file
+            File f = new File(filename);
+            // Open a buffered writer
+            BufferedWriter w = new BufferedWriter(new FileWriter(f)); 
+            // Loop through all the people in unique
+            for(int i = 0; i < unique.size(); i += 1) {
+                // Get the person
+                Person p = unique.get(i);
+                // Append to the file the name and tickets of the person in the correct format
+                w.append(p.name + delimiter + p.tickets);
+                // If i + 1 does not equal selector.unique.size(), go to the next line
+                if(i + 1 != unique.size()) {
+                    w.newLine();
+                }
+            }
+            // Close the buffered writer
+            w.close();
+            // Return true
+            return true;
+        } catch(Exception e) {
+            // Print error message and stack trace
+            System.out.println("Error while writing to the file");
+            e.printStackTrace();
+            // Return false
+            return false;
+        }
+    }
 }
+
 /**
  * Class for a person
  */
