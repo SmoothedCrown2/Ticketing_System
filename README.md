@@ -8,3 +8,4 @@ Class TicketSelector has two main functionalities:
 2. selection(int picks) which selects the specified number of people from the draw -> selectioin ensures that no person can be chosen twice in the same selection process and the people who have been drawn will be guaranteed not to be drawn in the next selection
 
 I have also provided a sample application that runs the selection system
+This application uses roster.txt and parses the information to use for the selection process
